@@ -15,7 +15,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    db.loadAllItems();
   }
 
   void _addNewItem() async {
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = db.items;
+    final items = db.loadAllItems();
     return Scaffold(
       appBar: AppBar(
         title: const Text("ToDo App"),
