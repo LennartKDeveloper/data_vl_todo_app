@@ -4,17 +4,26 @@ class MockDatabase implements DatabaseRepository {
   final List<String> _items = ["Einkaufen", "Flutter lernen", "Sport machen"];
 
   @override
-  List<String> loadAllItems() {
+  Future<List<String>> loadAllItems() async {
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    ); // Simuliere Datenbank wartezeit
     return _items;
   }
 
   @override
-  void addItem(String item) {
+  Future<void> addItem(String item) async {
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    ); // Simuliere Datenbank wartezeit
     _items.add(item);
   }
 
   @override
-  void deleteItem(int index) {
+  Future<void> deleteItem(int index) async {
+    await Future.delayed(
+      Duration(milliseconds: 500),
+    ); // Simuliere Datenbank wartezeit
     _items.removeAt(index);
   }
 }

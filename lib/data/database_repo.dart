@@ -1,5 +1,5 @@
 abstract class DatabaseRepository {
-  void loadAllItems();
-  void addItem(String item);
-  void deleteItem(int index);
+  Future<void> loadAllItems();
+  Future<void> addItem(String item);
+  Future<void> deleteItem(int index);
 }

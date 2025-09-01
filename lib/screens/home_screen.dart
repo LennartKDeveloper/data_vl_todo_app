@@ -64,18 +64,34 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final items = db.loadAllItems();
     return Scaffold(
       appBar: AppBar(
         title: const Text("ToDo App"),
         backgroundColor: Colors.white,
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) => ToDoItem(
-          text: items[index],
-          onDismissed: (_) => _deleteItem(index),
-        ),
+      body: FutureBuilder(
+        future: db.loadAllItems(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Colors.teal,
+                strokeWidth: 10,
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) => ToDoItem(
+                text: snapshot.data![index],
+                onDismissed: (_) => _deleteItem(index),
+              ),
+            );
+          } else {
+            return Text("Error${snapshot.error}");
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNewItem,
