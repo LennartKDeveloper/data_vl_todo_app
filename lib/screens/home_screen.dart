@@ -11,9 +11,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final MockDatabase db = MockDatabase();
+  List<String>? optimisticItems;
 
   @override
   void initState() {
+    db.loadAllItems().then((loadedItems) {
+      setState(() {
+        optimisticItems = loadedItems;
+      });
+    });
+
     super.initState();
   }
 
@@ -51,15 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (result != null && result.trim().isNotEmpty) {
       setState(() {
-        db.addItem(result.trim());
+        optimisticItems!.add(result.trim());
       });
+      db.addItem(result.trim());
     }
   }
 
   void _deleteItem(int index) {
     setState(() {
-      db.deleteItem(index);
+      optimisticItems!.removeAt(index);
     });
+    db.deleteItem(index);
   }
 
   @override
@@ -69,30 +78,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text("ToDo App"),
         backgroundColor: Colors.white,
       ),
-      body: FutureBuilder(
-        future: db.loadAllItems(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.teal,
-                strokeWidth: 10,
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
+      body: optimisticItems == null
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: optimisticItems!.length,
               itemBuilder: (context, index) => ToDoItem(
-                text: snapshot.data![index],
+                text: optimisticItems![index],
                 onDismissed: (_) => _deleteItem(index),
               ),
-            );
-          } else {
-            return Text("Error${snapshot.error}");
-          }
-        },
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addNewItem,
         backgroundColor: Colors.teal,

@@ -8,7 +8,7 @@ class MockDatabase implements DatabaseRepository {
     await Future.delayed(
       Duration(milliseconds: 500),
     ); // Simuliere Datenbank wartezeit
-    return _items;
+    return List.from(_items);
   }
 
   @override
