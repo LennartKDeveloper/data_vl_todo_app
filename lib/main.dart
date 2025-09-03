@@ -1,3 +1,4 @@
+import 'package:data_vl_todo_app/screens/custom_splash.dart';
 import 'package:flutter/material.dart';
 import 'screens/splash_screen.dart';
 import 'screens/home_screen.dart';
@@ -20,7 +21,7 @@ class ToDoApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const SplashScreen(),
+        '/': (context) => const CustomSplash(),
         '/home': (context) => const HomeScreen(),
       },
     );
